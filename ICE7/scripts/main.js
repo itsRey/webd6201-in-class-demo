@@ -1,16 +1,16 @@
 (function () {
 
     function DisplayHome() {
-        $("#RandomButton").on("click", function() {
+        $("#RandomButton").on("click", function () {
             location.href = 'contact.html'
         })
 
         // concatenation - '1' + '2' + '3'
         // interpolation - `${var_1}`
         let firstString = "This is a "
-        let secondString = `${ firstString } main paragraph that we added through javascript and this is also on GitHub Pages`
+        let secondString = `${firstString} main paragraph that we added through javascript and this is also on GitHub Pages`
 
-        $("main").addClass("container").append(`<p id="MainParagraph" class="mt-3 container">${ secondString }</p>`)
+        $("main").addClass("container").append(`<p id="MainParagraph" class="mt-3 container">${secondString}</p>`)
     }
 
     function DisplayProjects() {
@@ -25,8 +25,36 @@
         }
     }
 
+    function ValidateInput(inputFieldID, regularExpression, exception){
+        let messageArea = $('#messageArea').hide();
+
+        $('#' + inputFieldID).on("blur", function () {
+            let inputText = $(this).val();
+
+            if (!regularExpression.test(inputText)) {
+                $(this).trigger("focus").trigger("select");
+
+                messageArea.addClass("alert alert-danger").text(exception).show();
+            } else {
+                messageArea.removeAttr("class").hide();
+            }
+        });
+    }
+
+    function ContactFormValidate(){
+        let fullNamePattern = /^([A-Z][a-z]{1,25})((\s|,|-)([A-Z][a-z]{1,25}))*(\s|-|,)*([A-Z][a-z]{1,25})*$/g;
+        let contactNumberPattern = /^(\+\d{1,3})?[\s.-]?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/g;
+        let emailAddressPattern = /^[\w-\.]+@([\w-]+\.)+[\w-][^\d]{2,10}$/g;
+
+        ValidateInput("fullName", fullNamePattern, "Please enter a valid Full Name which means a capitalized first and last ")
+        ValidateInput("contactNumber", contactNumberPattern, "Please enter a valid contact number")
+        ValidateInput("emailAddress", emailAddressPattern, "Please enter a valid Email Address")
+    }
+
     function DisplayContacts() {
         console.log("Contact Us Page")
+
+        ContactFormValidate()
 
         let submitButton = document.getElementById("submitButton")
         let subscribeCheckbox = document.getElementById("subscribeCheckbox")
@@ -36,7 +64,7 @@
         // console.log(localStorage.getItem("Random Variable"))
         // localStorage.removeItem("Random Variable")
 
-        submitButton.addEventListener("click", function() {
+        submitButton.addEventListener("click", function () {
             if (subscribeCheckbox.checked) {
                 // If user subscribes, store the contact in localStorage
                 AddContact(fullName.value, contactNumber.value, emailAddress.value)
@@ -57,33 +85,33 @@
             for (const key of keys) {
                 let contactData = localStorage.getItem(key) // Get localStorage data value related to the key
                 let contact = new core.Contact()
-                
+
                 contact.deserialize(contactData)
 
                 // Inject repeatable row into the contactList
                 data += `<tr>
-                    <th scope="row" class="text-center">${ index }</th>
-                    <td class="text-center">${ contact.Name }</td>
-                    <td class="text-center">${ contact.ContactNumber }</td>
-                    <td class="text-center">${ contact.EmailAddress }</td>
-                    <td class="text-center"><button value="${ key }" class="btn btn-primary btn-sm edit"><i class="fas fa-edit fa-sm"></i>&nbsp; Edit</button></td>
-                    <td class="text-center"><button value="${ key }" class="btn btn-danger btn-sm delete"><i class="fas fa-trash-alt fa-sm"></i>&nbsp; Delete</button></td>
+                    <th scope="row" class="text-center">${index}</th>
+                    <td class="text-center">${contact.Name}</td>
+                    <td class="text-center">${contact.ContactNumber}</td>
+                    <td class="text-center">${contact.EmailAddress}</td>
+                    <td class="text-center"><button value="${key}" class="btn btn-primary btn-sm edit"><i class="fas fa-edit fa-sm"></i>&nbsp; Edit</button></td>
+                    <td class="text-center"><button value="${key}" class="btn btn-danger btn-sm delete"><i class="fas fa-trash-alt fa-sm"></i>&nbsp; Delete</button></td>
                 </tr>
                 `
-                
+
                 index++
             }
 
             contactList.innerHTML = data
 
-            $("button.delete").on("click", function() {
+            $("button.delete").on("click", function () {
                 if (confirm("Are you sure you want to delete this?"))
                     localStorage.removeItem($(this).val())
 
                 location.href = 'contact-list.html'
             })
 
-            $("button.edit").on("click", function() {
+            $("button.edit").on("click", function () {
                 location.href = 'edit.html#' + $(this).val()
             })
         }
@@ -94,9 +122,10 @@
     }
 
     function DisplayEditPage() {
+        ContactFormValidate()
         let page = location.hash.substring(1)
 
-        switch(page) {
+        switch (page) {
             case "Add":
                 {
                     $("#welcome").text("WEBD6201 Demo Add Contact")
@@ -148,7 +177,7 @@
     function DisplayReferences() {
         console.log("References Page")
     }
-    
+
     function Start() {
         console.log("App Started Successfully!")
 
