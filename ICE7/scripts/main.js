@@ -1,5 +1,23 @@
 (function () {
 
+    function DisplayNavBar() {
+        // AJAX
+        // Instantiate the XHR Object
+        let XHR = new XMLHttpRequest()
+
+        // Add event listener for the readystatechange
+        XHR.addEventListener("readystatechange", () => {
+            if (XHR.readyState === 4 && XHR.status === 200) {
+                $('#navigationBar').html(XHR.responseText)
+            }
+        })
+
+        // Connect and get data
+        XHR.open("GET", "../static/header.html")
+
+        // Send request to server to await response
+        XHR.send()
+    }
     function DisplayHome() {
         $("#RandomButton").on("click", function () {
             location.href = 'contact.html'
@@ -11,6 +29,8 @@
         let secondString = `${firstString} main paragraph that we added through javascript and this is also on GitHub Pages`
 
         $("main").addClass("container").append(`<p id="MainParagraph" class="mt-3 container">${secondString}</p>`)
+
+
     }
 
     function DisplayProjects() {
@@ -25,7 +45,7 @@
         }
     }
 
-    function ValidateInput(inputFieldID, regularExpression, exception){
+    function ValidateInput(inputFieldID, regularExpression, exception) {
         let messageArea = $('#messageArea').hide();
 
         $('#' + inputFieldID).on("blur", function () {
@@ -41,7 +61,7 @@
         });
     }
 
-    function ContactFormValidate(){
+    function ContactFormValidate() {
         let fullNamePattern = /^([A-Z][a-z]{1,25})((\s|,|-)([A-Z][a-z]{1,25}))*(\s|-|,)*([A-Z][a-z]{1,25})*$/g;
         let contactNumberPattern = /^(\+\d{1,3})?[\s.-]?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/g;
         let emailAddressPattern = /^[\w-\.]+@([\w-]+\.)+[\w-][^\d]{2,10}$/g;
@@ -178,12 +198,20 @@
         console.log("References Page")
     }
 
+    function DisplayLoginPage() {
+        console.log("References Page")
+    }
+    function DisplayRegisterPage() {
+        console.log("References Page")
+    }
+
     function Start() {
         console.log("App Started Successfully!")
 
         switch (document.title) {
             case "Home - WEBD6201 Demo":
                 DisplayHome()
+                DisplayNavBar()
                 break
             case "Projects - WEBD6201 Demo":
                 DisplayProjects()
@@ -199,6 +227,12 @@
                 break
             case "Edit - WEBD6201 Demo":
                 DisplayEditPage()
+                break
+            case "Login - WEBD6201 Demo":
+                DisplayLoginPage()
+                break
+            case "Register - WEBD6201 Demo":
+                DisplayRegisterPage()
                 break
         }
     }
