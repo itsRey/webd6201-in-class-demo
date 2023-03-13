@@ -38,21 +38,21 @@
      */
     function LoadHeader(html_data) {
         $('#navigationBar').html(html_data)
-        $(`li>a:contains(${ document.title })`).addClass('active')
+        $(`li>a:contains(${document.title})`).addClass('active')
         CheckLogin()
     }
 
     function DisplayHome() {
-        $("#RandomButton").on("click", function() {
+        $("#RandomButton").on("click", function () {
             location.href = 'contact.html'
         })
 
         // concatenation - '1' + '2' + '3'
         // interpolation - `${var_1}`
         let firstString = "This is a "
-        let secondString = `${ firstString } main paragraph that we added through javascript and this is also on GitHub Pages`
+        let secondString = `${firstString} main paragraph that we added through javascript and this is also on GitHub Pages`
 
-        $("main").addClass("container").append(`<p id="MainParagraph" class="mt-3 container">${ secondString }</p>`)
+        $("main").addClass("container").append(`<p id="MainParagraph" class="mt-3 container">${secondString}</p>`)
     }
 
     function DisplayProjects() {
@@ -70,7 +70,7 @@
     function ValidateInput(inputFieldID, regularExpression, exception) {
         let messageArea = $('#messageArea').hide()
 
-        $('#' + inputFieldID).on("blur", function() {
+        $('#' + inputFieldID).on("blur", function () {
             let inputText = $(this).val()
 
             if (!regularExpression.test(inputText)) {
@@ -108,7 +108,7 @@
         // console.log(localStorage.getItem("Random Variable"))
         // localStorage.removeItem("Random Variable")
 
-        submitButton.addEventListener("click", function() {
+        submitButton.addEventListener("click", function () {
             if (subscribeCheckbox.checked) {
                 // If user subscribes, store the contact in localStorage
                 AddContact(fullName.value, contactNumber.value, emailAddress.value)
@@ -129,33 +129,33 @@
             for (const key of keys) {
                 let contactData = localStorage.getItem(key) // Get localStorage data value related to the key
                 let contact = new core.Contact()
-                
+
                 contact.deserialize(contactData)
 
                 // Inject repeatable row into the contactList
                 data += `<tr>
-                    <th scope="row" class="text-center">${ index }</th>
-                    <td class="text-center">${ contact.Name }</td>
-                    <td class="text-center">${ contact.ContactNumber }</td>
-                    <td class="text-center">${ contact.EmailAddress }</td>
-                    <td class="text-center"><button value="${ key }" class="btn btn-primary btn-sm edit"><i class="fas fa-edit fa-sm"></i>&nbsp; Edit</button></td>
-                    <td class="text-center"><button value="${ key }" class="btn btn-danger btn-sm delete"><i class="fas fa-trash-alt fa-sm"></i>&nbsp; Delete</button></td>
+                    <th scope="row" class="text-center">${index}</th>
+                    <td class="text-center">${contact.Name}</td>
+                    <td class="text-center">${contact.ContactNumber}</td>
+                    <td class="text-center">${contact.EmailAddress}</td>
+                    <td class="text-center"><button value="${key}" class="btn btn-primary btn-sm edit"><i class="fas fa-edit fa-sm"></i>&nbsp; Edit</button></td>
+                    <td class="text-center"><button value="${key}" class="btn btn-danger btn-sm delete"><i class="fas fa-trash-alt fa-sm"></i>&nbsp; Delete</button></td>
                 </tr>
                 `
-                
+
                 index++
             }
 
             contactList.innerHTML = data
 
-            $("button.delete").on("click", function() {
+            $("button.delete").on("click", function () {
                 if (confirm("Are you sure you want to delete this?"))
                     localStorage.removeItem($(this).val())
 
                 location.href = 'contact-list.html'
             })
 
-            $("button.edit").on("click", function() {
+            $("button.edit").on("click", function () {
                 location.href = 'edit.html#' + $(this).val()
             })
         }
@@ -169,7 +169,7 @@
         ContactFormValidate()
         let page = location.hash.substring(1)
 
-        switch(page) {
+        switch (page) {
             case "Add":
                 {
                     $("#welcome").text("WEBD6201 Demo Add Contact")
@@ -228,14 +228,14 @@
         let messageArea = $('#messageArea')
         messageArea.hide()
 
-        $('#loginButton').on('click', function() {
+        $('#loginButton').on('click', function () {
             let success = false
 
             // create an empty user object
             let newUser = new core.User()
 
             // use JQuery to load users.json file and read over it
-            $.get('./Data/users.json', function(data) {
+            $.get('./Data/users.json', function (data) {
                 // iterate over every user in the users.json file... for loop
                 for (const user of data.users) {
                     // check if the username and password match the user data
@@ -265,10 +265,10 @@
                 }
             })
 
-            
+
         })
 
-        $('#cancelButton').on('click', function() {
+        $('#cancelButton').on('click', function () {
             // clear the form
             document.form[0].reset()
 
@@ -277,28 +277,46 @@
         })
     }
 
+
     function CheckLogin() {
-        // if the user is logged in, then
+        // if the user is logged in
         if (sessionStorage.getItem("user")) {
             // switch the login button to logout
             $('#login').html(
                 `<a id="logout" class="nav-link" href="#"><i class="fas fa-sign-out-alt"></i> Logout</a>`
-            )
+            );
 
-            $('#logout').on('click', function() {
+            // Check if the user is on the contact.html page
+            if (location.pathname.includes('contact.html')) {
+                // Render the button
+                $('.row').append(
+                    `<div class="col-lg-4 col-md-4">
+                        <a id="contact-list-btn" href="./contact-list.html" class="btn btn-primary btn-lg"><i class="fas fa-users fa-lg"></i> Show Contact List</a>
+                    </div>`
+                );
+            }
+
+            $('#logout').on('click', function () {
                 // perform logout
-                sessionStorage.clear()
+                sessionStorage.clear();
 
                 // redirect to login.html
-                location.href = 'login.html'
-            })
+                location.href = 'login.html';
+            });
+        }
+        else {
+            // Hide the contact list button if the user is not logged in
+            if (location.pathname.includes('contact.html')) {
+                $('#contact-list-btn').hide();
+            }
         }
     }
-    
+
+
     function DisplayRegisterPage() {
         console.log("Registration Page")
     }
-    
+
     function Start() {
         console.log("App Started Successfully!")
 
@@ -330,7 +348,7 @@
                 DisplayRegisterPage()
                 break
         }
-        
+
 
     }
 
